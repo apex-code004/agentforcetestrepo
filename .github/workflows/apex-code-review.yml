@@ -1,26 +1,79 @@
-name: 🤖 Request GitHub Copilot Code Review
+name: 🔍 Amadeus Apex Code Review Agent
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, synchronize, reopened]
 
 permissions:
   pull-requests: write
+  contents:      read
+  issues:        write
+  models:        read
 
 jobs:
-  request-copilot-review:
-    name: Request Copilot Review
+  apex-review:
+    name: Run Apex Code Review
     runs-on: ubuntu-latest
 
     steps:
-      - name: Request GitHub Copilot as reviewer
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: pip install openai requests
+
+      - name: Resolve PR Number
+        id: resolve_pr
         run: |
-          gh api \
-            --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/$REPO/pulls/$PR_NUMBER/requested_reviewers \
-            -f "reviewers[]=copilot"
+          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+
+      - name: Post In-Progress Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.resolve_pr.outputs.pr_number }},
+              body: [
+                "## 🔍 Amadeus Apex Review Agent",
+                "",
+                "⏳ **Review in progress...** Analyzing your Salesforce Apex code against Amadeus Hospitality Development Standards.",
+                "",
+                "> 🔑 Powered by **GitHub Models** (gpt-4o) · Uses built-in `GITHUB_TOKEN` · No Copilot licence required"
+              ].join("\n")
+            });
+
+      - name: Run Apex Code Review
+        env:
+          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER:         ${{ steps.resolve_pr.outputs.pr_number }}
+          REPO:              ${{ github.repository }}
+          GITHUB_RUN_ID:     ${{ github.run_id }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+        run: python .github/scripts/apex_review.py
+
+      - name: Handle Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.resolve_pr.outputs.pr_number }},
+              body: [
+                "## ❌ Amadeus Apex Review Agent — Error",
+                "",
+                "The review agent hit an error. See the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.",
+                "",
+                "**To retry:** Push a new commit to this PR to re-trigger the review."
+              ].join("\n")
+            });
