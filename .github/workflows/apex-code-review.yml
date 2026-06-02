@@ -1,13 +1,8 @@
 name: 🔍 Amadeus Apex Code Review Agent
 
 on:
-  # Trigger 1: When label "apex-review" is added to a PR
   pull_request:
-    types: [labeled]
-
-  # Trigger 2: When someone comments /apex-review on a PR
-  issue_comment:
-    types: [created]
+    types: [opened, synchronize, reopened]
 
 permissions:
   pull-requests: write
@@ -19,13 +14,6 @@ jobs:
   apex-review:
     name: Run Apex Code Review
     runs-on: ubuntu-latest
-
-    # Run only when:
-    # - Label "apex-review" is added to a PR, OR
-    # - Comment "/apex-review" is posted on a PR
-    if: |
-      (github.event_name == 'pull_request' && github.event.label.name == 'apex-review') ||
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request != null && startsWith(github.event.comment.body, '/apex-review'))
 
     steps:
       # ── 1. Checkout repo so we can read .github/instructions/*.md files ───────
@@ -44,15 +32,11 @@ jobs:
       - name: Install Dependencies
         run: pip install openai requests
 
-      # ── 4. Resolve the PR number regardless of which trigger fired ────────────
+      # ── 4. Resolve the PR number ──────────────────────────────────────────────
       - name: Resolve PR Number
         id: resolve_pr
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-          else
-            echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
-          fi
+          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
 
       # ── 5. Let the team know the review has started ───────────────────────────
       - name: Post In-Progress Comment
@@ -97,6 +81,6 @@ jobs:
                 "",
                 "The review agent hit an error. See the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.",
                 "",
-                "**To retry:** Remove and re-add the `apex-review` label, or post `/apex-review` again."
+                "**To retry:** Push a new commit to this PR to re-trigger the review."
               ].join("\n")
             });
