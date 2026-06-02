@@ -1,0 +1,101 @@
+name: Static Analysis
+ 
+on:
+  pull_request:
+  workflow_dispatch:
+ 
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write  # changed from read — needed to post comments
+ 
+jobs:
+  apex-doc-agent:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+ 
+      - name: Get changed Apex files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: '**/*.cls'
+ 
+      - name: Run Agent on changed Apex files
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          pip install anthropic requests --quiet
+          python3 .github/scripts/run_agent.py
+          python3 .github/scripts/apex_review.py
+ 
+      - name: Run Agent on ALL Apex files (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ''
+          REPO: ${{ github.repository }}
+        run: |
+          find . -name "*.cls" > all_files.txt
+          pip install anthropic requests --quiet
+          python3 .github/scripts/run_agent.py --all
+          python3 .github/scripts/apex_review.py --all
+ 
+  eslint:
+    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Get changed JS files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
+        with:
+          files: '**/*.js'
+      - name: Run ESLint
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          npm ci --ignore-scripts
+          npx eslint ${{ steps.changed-files.outputs.all_changed_files }}
+ 
+  salesforce-code-analyzer-workflow:
+    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '>=20.9.0'
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'zulu'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '>=3.10'
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli@latest
+      - name: Install Salesforce Code Analyzer
+        run: sf plugins install code-analyzer@latest
+      - name: Run Salesforce Code Analyzer
+        id: run-code-analyzer
+        uses: forcedotcom/run-code-analyzer@v2
+        with:
+          run-arguments: --rule-selector AppExchange --workspace . --view detail --output-file sfca_results.html --output-file sfca_results.json
+          results-artifact-name: salesforce-code-analyzer-results
+      - name: Fail on violations
+        if: |
+          steps.run-code-analyzer.outputs.exit-code > 0 ||
+          steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
+          steps.run-code-analyzer.outputs.num-sev2-violations > 0
+        run: exit 1
