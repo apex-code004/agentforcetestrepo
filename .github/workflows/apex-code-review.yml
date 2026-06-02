@@ -1,86 +1,25 @@
-name: 🔍 Amadeus Apex Code Review Agent
+name: 🤖 Request GitHub Copilot Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [opened, reopened]
 
 permissions:
   pull-requests: write
-  contents:      read
-  issues:        write
-  models:        read   # ← Grants access to GitHub Models AI (uses built-in GITHUB_TOKEN)
 
 jobs:
-  apex-review:
-    name: Run Apex Code Review
+  request-copilot-review:
+    name: Request Copilot Review
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Checkout repo so we can read .github/instructions/*.md files ───────
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # ── 2. Python setup ───────────────────────────────────────────────────────
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      # ── 3. Install only what's needed (openai SDK works with GitHub Models) ───
-      - name: Install Dependencies
-        run: pip install openai requests
-
-      # ── 4. Resolve the PR number ──────────────────────────────────────────────
-      - name: Resolve PR Number
-        id: resolve_pr
-        run: |
-          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-
-      # ── 5. Let the team know the review has started ───────────────────────────
-      - name: Post In-Progress Comment
+      - name: Request GitHub Copilot as reviewer
         uses: actions/github-script@v7
         with:
           script: |
-            await github.rest.issues.createComment({
+            await github.rest.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number: ${{ steps.resolve_pr.outputs.pr_number }},
-              body: [
-                "## 🔍 Amadeus Apex Review Agent",
-                "",
-                "⏳ **Review in progress...** Analyzing your Salesforce Apex code against Amadeus Hospitality Development Standards.",
-                "",
-                "> 🔑 Powered by **GitHub Models** · No external API key required · Uses your existing GitHub Copilot licence"
-              ].join("\n")
-            });
-
-      # ── 6. Run the review ─────────────────────────────────────────────────────
-      - name: Run Apex Code Review
-        env:
-          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}  # Built-in — always available
-          PR_NUMBER:         ${{ steps.resolve_pr.outputs.pr_number }}
-          REPO:              ${{ github.repository }}
-          GITHUB_RUN_ID:     ${{ github.run_id }}
-          GITHUB_SERVER_URL: ${{ github.server_url }}
-        run: python .github/scripts/apex_review.py
-
-      # ── 7. Surface errors clearly if something goes wrong ─────────────────────
-      - name: Handle Failure
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ steps.resolve_pr.outputs.pr_number }},
-              body: [
-                "## ❌ Amadeus Apex Review Agent — Error",
-                "",
-                "The review agent hit an error. See the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.",
-                "",
-                "**To retry:** Push a new commit to this PR to re-trigger the review."
-              ].join("\n")
+              pull_number: context.payload.pull_request.number,
+              reviewers: ['copilot-pull-request-reviewer[bot]']
             });
