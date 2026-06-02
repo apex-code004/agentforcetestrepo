@@ -1,0 +1,6 @@
+FirstName,LastName,Email,Phone,RiskTolerance__c,LastAdvisorContact__c,OwnerId
+Sarah,Chen,sarah.chen@example.com,+14155550101,Aggressive,2026-03-01,
+James,Okonkwo,j.okonkwo@example.com,+14155550102,Moderate,2026-05-15,
+Maria,Fernandez,m.fernandez@example.com,+14155550103,Conservative,2026-01-10,
+David,Park,david.park@example.com,+14155550104,Speculative,2026-05-28,
+Aisha,Williams,a.williams@example.com,+14155550105,Moderate,2025-12-01,

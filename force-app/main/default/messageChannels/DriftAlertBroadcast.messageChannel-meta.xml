@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>DriftAlertBroadcast</masterLabel>
+    <isExposed>true</isExposed>
+    <description>Broadcasts drift alert events across unrelated LWC components on the same page.</description>
+    <lightningMessageFields>
+        <fieldName>contactId</fieldName>
+        <description>Contact record ID of the affected client</description>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>driftPct</fieldName>
+        <description>Drift percentage that triggered the alert</description>
+    </lightningMessageFields>
+</LightningMessageChannel>

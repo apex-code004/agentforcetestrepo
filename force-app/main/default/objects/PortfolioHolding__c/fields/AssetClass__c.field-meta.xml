@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AssetClass__c</fullName>
+    <label>Asset Class</label>
+    <description>Broad asset classification</description>
+    <type>Picklist</type>
+    <required>true</required>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Equity - US</fullName>
+                <default>true</default>
+                <label>Equity - US</label>
+            </value>
+            <value>
+                <fullName>Equity - International</fullName>
+                <default>false</default>
+                <label>Equity - International</label>
+            </value>
+            <value>
+                <fullName>Fixed Income - Government</fullName>
+                <default>false</default>
+                <label>Fixed Income - Government</label>
+            </value>
+            <value>
+                <fullName>Fixed Income - Corporate</fullName>
+                <default>false</default>
+                <label>Fixed Income - Corporate</label>
+            </value>
+            <value>
+                <fullName>Cash &amp; Equivalents</fullName>
+                <default>false</default>
+                <label>Cash &amp; Equivalents</label>
+            </value>
+            <value>
+                <fullName>Real Estate</fullName>
+                <default>false</default>
+                <label>Real Estate</label>
+            </value>
+            <value>
+                <fullName>Commodities</fullName>
+                <default>false</default>
+                <label>Commodities</label>
+            </value>
+            <value>
+                <fullName>Alternative</fullName>
+                <default>false</default>
+                <label>Alternative</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

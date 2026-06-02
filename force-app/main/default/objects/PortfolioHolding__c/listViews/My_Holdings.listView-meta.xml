@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Holdings</fullName>
+    <label>My Portfolio Holdings</label>
+    <filterScope>Everything</filterScope>
+    <columns>NAME</columns>
+    <columns>Ticker__c</columns>
+    <columns>AssetClass__c</columns>
+    <columns>Quantity__c</columns>
+    <columns>CurrentValue__c</columns>
+    <columns>CurrentAllocationPct__c</columns>
+    <columns>AsOfDate__c</columns>
+    <columns>FinancialAccountId__c</columns>
+</ListView>

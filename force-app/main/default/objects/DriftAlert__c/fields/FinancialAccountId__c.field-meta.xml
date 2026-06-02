@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinancialAccountId__c</fullName>
+    <label>Financial Account</label>
+    <description>Affected financial account</description>
+    <type>Lookup</type>
+    <referenceTo>FinancialAccount__c</referenceTo>
+    <relationshipName>DriftAlerts</relationshipName>
+    <relationshipLabel>Drift Alerts</relationshipLabel>
+    <required>true</required>
+    <deleteConstraint>Restrict</deleteConstraint>
+</CustomField>

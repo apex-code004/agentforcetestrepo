@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>FinancialAccountId__c</fullName>
+    <label>Financial Account</label>
+    <description>Parent financial account (Master-Detail)</description>
+    <type>MasterDetail</type>
+    <referenceTo>FinancialAccount__c</referenceTo>
+    <relationshipName>PortfolioHoldings</relationshipName>
+    <relationshipLabel>Portfolio Holdings</relationshipLabel>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

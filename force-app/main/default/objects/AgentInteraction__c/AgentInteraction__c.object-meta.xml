@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Agent Interaction</label>
+    <pluralLabel>Agent Interactions</pluralLabel>
+    <nameField>
+        <label>Agent Interaction Name</label>
+        <type>AutoNumber</type>
+        <displayFormat>AI-{0000}</displayFormat>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>Private</sharingModel>
+    <enableActivities>false</enableActivities>
+    <enableReports>true</enableReports>
+    <enableHistory>false</enableHistory>
+    <enableSearch>true</enableSearch>
+    <description>Compliance audit log for every Agentforce copilot interaction. Never delete records.</description>
+</CustomObject>

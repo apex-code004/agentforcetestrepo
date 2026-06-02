@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <label>All Agent Interactions</label>
+    <filterScope>Everything</filterScope>
+    <columns>NAME</columns>
+    <columns>ContactId__c</columns>
+    <columns>AgentTopic__c</columns>
+    <columns>WasEscalated__c</columns>
+    <columns>InteractionTime__c</columns>
+    <columns>AdvisorId__c</columns>
+</ListView>

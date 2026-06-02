@@ -1,0 +1,39 @@
+<template>
+    <lightning-card title="Drift Alerts" icon-name="utility:warning">
+        <template if:true={hasAlerts}>
+            <ul class="slds-list_dotted slds-var-p-around_small">
+                <template for:each={alerts} for:item="alert">
+                    <li key={alert.Id} class="slds-item slds-var-p-vertical_x-small">
+                        <div class="slds-grid slds-grid_align-spread">
+                            <div>
+                                <lightning-badge label={alert.AlertStatus__c}></lightning-badge>
+                                <p class="slds-text-body_small slds-m-top_xx-small">
+                                    Drift: <strong>{alert.DriftPct__c}%</strong>
+                                    &nbsp;·&nbsp; {alert.TriggerSource__c}
+                                </p>
+                                <p class="slds-text-color_weak slds-text-body_small">
+                                    {alert.FinancialAccountId__r.AccountNumber__c}
+                                </p>
+                            </div>
+                            <lightning-button-icon
+                                icon-name="utility:check"
+                                title="Resolve"
+                                onclick={handleResolve}
+                                data-alert-id={alert.Id}
+                                variant="border-filled"
+                                size="small">
+                            </lightning-button-icon>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+        <template if:false={hasAlerts}>
+            <div class="slds-var-p-around_medium slds-text-align_center">
+                <lightning-icon icon-name="utility:check" size="small"
+                    alternative-text="No alerts"></lightning-icon>
+                <p class="slds-text-color_success slds-m-top_x-small">No open alerts</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

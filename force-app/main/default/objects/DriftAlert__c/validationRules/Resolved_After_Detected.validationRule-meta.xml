@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Resolved_After_Detected</fullName>
+    <active>true</active>
+    <description>Ensures the resolved date is not before the detection date.</description>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(ResolvedAt__c)),
+  ResolvedAt__c &lt; DetectedAt__c
+)</errorConditionFormula>
+    <errorMessage>Resolved date cannot be before the detection date.</errorMessage>
+</ValidationRule>

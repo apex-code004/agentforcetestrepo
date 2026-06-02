@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DetectedAt__c</fullName>
+    <label>Detected At</label>
+    <description>When drift was first detected</description>
+    <type>DateTime</type>
+    <required>true</required>
+</CustomField>

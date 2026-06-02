@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AccountType__c</fullName>
+    <label>Account Type</label>
+    <description>Type of investment account</description>
+    <type>Picklist</type>
+    <required>true</required>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Individual Brokerage</fullName>
+                <default>true</default>
+                <label>Individual Brokerage</label>
+            </value>
+            <value>
+                <fullName>IRA - Traditional</fullName>
+                <default>false</default>
+                <label>IRA - Traditional</label>
+            </value>
+            <value>
+                <fullName>IRA - Roth</fullName>
+                <default>false</default>
+                <label>IRA - Roth</label>
+            </value>
+            <value>
+                <fullName>401(k)</fullName>
+                <default>false</default>
+                <label>401(k)</label>
+            </value>
+            <value>
+                <fullName>Joint Tenants</fullName>
+                <default>false</default>
+                <label>Joint Tenants</label>
+            </value>
+            <value>
+                <fullName>Trust Account</fullName>
+                <default>false</default>
+                <label>Trust Account</label>
+            </value>
+            <value>
+                <fullName>Custodial</fullName>
+                <default>false</default>
+                <label>Custodial</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

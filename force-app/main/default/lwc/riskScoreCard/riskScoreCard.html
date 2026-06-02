@@ -1,0 +1,71 @@
+<template>
+    <lightning-card title="Client Overview" icon-name="standard:contact">
+        <template if:true={client}>
+            <div class="slds-var-p-around_medium">
+
+                <!-- AUM -->
+                <div class="slds-grid slds-gutters slds-m-bottom_small">
+                    <div class="slds-col slds-size_1-of-2">
+                        <p class="slds-text-body_small slds-text-color_weak">Total AUM</p>
+                        <lightning-formatted-number
+                            value={totalAUM}
+                            format-style="currency"
+                            currency-code="USD"
+                            maximum-fraction-digits="0"
+                            class="slds-text-heading_medium">
+                        </lightning-formatted-number>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <p class="slds-text-body_small slds-text-color_weak">Portfolio Drift</p>
+                        <p class={driftClass}>
+                            <lightning-formatted-number
+                                value={client.PortfolioDrift__c}
+                                maximum-fraction-digits="1">
+                            </lightning-formatted-number>%
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="slds-m-vertical_small"/>
+
+                <!-- Risk Tolerance -->
+                <div class="slds-m-bottom_x-small">
+                    <p class="slds-text-body_small slds-text-color_weak">Risk Tolerance</p>
+                    <lightning-badge label={client.RiskTolerance__c}
+                        class={riskBadgeClass}></lightning-badge>
+                </div>
+
+                <!-- Segment flags -->
+                <div class="slds-m-top_small">
+                    <template if:true={hasDriftAlert}>
+                        <lightning-badge label="⚠ Drift Alert" class="slds-theme_warning"></lightning-badge>
+                    </template>
+                    <template if:true={hasChurnRisk}>
+                        <lightning-badge label="⏰ Churn Risk" class="slds-theme_error slds-m-left_xx-small"></lightning-badge>
+                    </template>
+                </div>
+
+                <!-- Last contact -->
+                <div class="slds-m-top_small">
+                    <p class="slds-text-body_small slds-text-color_weak">Last Advisor Contact</p>
+                    <template if:true={client.LastAdvisorContact__c}>
+                        <lightning-formatted-date-time
+                            value={client.LastAdvisorContact__c}
+                            year="numeric" month="short" day="numeric">
+                        </lightning-formatted-date-time>
+                    </template>
+                    <template if:false={client.LastAdvisorContact__c}>
+                        <p class="slds-text-color_error">Never contacted</p>
+                    </template>
+                </div>
+
+                <!-- Advisor -->
+                <div class="slds-m-top_small">
+                    <p class="slds-text-body_small slds-text-color_weak">Assigned Advisor</p>
+                    <p class="slds-text-body_regular">{advisorName}</p>
+                </div>
+
+            </div>
+        </template>
+    </lightning-card>
+</template>

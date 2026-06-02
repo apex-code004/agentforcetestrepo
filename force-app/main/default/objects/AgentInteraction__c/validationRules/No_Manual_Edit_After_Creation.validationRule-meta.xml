@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>No_Manual_Edit_After_Creation</fullName>
+    <active>true</active>
+    <description>Prevents any edits to agent interaction records after initial creation — immutable compliance log.</description>
+    <errorConditionFormula>NOT(ISNEW())</errorConditionFormula>
+    <errorMessage>Agent interaction records are immutable compliance logs and cannot be edited.</errorMessage>
+</ValidationRule>

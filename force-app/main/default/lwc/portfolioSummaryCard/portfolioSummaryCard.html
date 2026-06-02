@@ -1,0 +1,49 @@
+<template>
+    <lightning-card title="Portfolio Summary" icon-name="utility:chart">
+        <div class="slds-var-p-around_medium">
+
+            <!-- Accounts list -->
+            <template if:true={hasAccounts}>
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">Accounts</h3>
+                <template for:each={accounts} for:item="acct">
+                    <div key={acct.Id}
+                         class="slds-grid slds-grid_align-spread slds-m-bottom_xx-small">
+                        <div>
+                            <p class="slds-text-body_small">
+                                <strong>{acct.AccountNumber__c}</strong>
+                                &nbsp;·&nbsp; {acct.AccountType__c}
+                            </p>
+                            <lightning-badge label={acct.Status__c}></lightning-badge>
+                        </div>
+                        <div class="slds-text-align_right">
+                            <lightning-formatted-number
+                                value={acct.TotalValue__c}
+                                format-style="currency"
+                                currency-code="USD"
+                                maximum-fraction-digits="0">
+                            </lightning-formatted-number>
+                        </div>
+                    </div>
+                </template>
+            </template>
+
+            <hr class="slds-m-vertical_small"/>
+
+            <!-- Top holdings -->
+            <template if:true={hasHoldings}>
+                <h3 class="slds-text-heading_small slds-m-bottom_x-small">Top Holdings</h3>
+                <lightning-datatable
+                    key-field="Id"
+                    data={holdings}
+                    columns={holdingColumns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </template>
+
+            <template if:false={hasHoldings}>
+                <p class="slds-text-color_weak slds-text-align_center">No holdings on record</p>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

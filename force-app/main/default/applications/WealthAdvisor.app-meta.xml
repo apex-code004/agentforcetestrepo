@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <description>Wealth Advisor Intelligence Platform — Real-Time Financial Advisory Copilot</description>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Wealth Advisor</label>
+    <tabs>standard-Contact</tabs>
+    <tabs>FinancialAccount__c</tabs>
+    <tabs>PortfolioHolding__c</tabs>
+    <tabs>DriftAlert__c</tabs>
+    <tabs>AgentInteraction__c</tabs>
+</CustomApplication>

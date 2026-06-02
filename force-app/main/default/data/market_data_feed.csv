@@ -1,0 +1,11 @@
+Id,Ticker__c,Price__c,DayChangePct__c,Sector__c,AsOfDate__c
+MKT-001,AAPL,189.45,0.82,Information Technology,2026-05-31
+MKT-002,MSFT,415.20,-0.34,Information Technology,2026-05-31
+MKT-003,NVDA,875.60,3.21,Information Technology,2026-05-31
+MKT-004,TSLA,248.90,-1.45,Consumer Discretionary,2026-05-31
+MKT-005,META,512.30,1.12,Communication Services,2026-05-31
+MKT-006,SPY,527.80,0.45,ETF - US Broad Market,2026-05-31
+MKT-007,BND,72.40,-0.12,ETF - Fixed Income,2026-05-31
+MKT-008,TLT,88.90,-0.28,ETF - Long Duration,2026-05-31
+MKT-009,VXUS,58.70,0.67,ETF - International,2026-05-31
+MKT-010,CASH,1.00,0.00,Money Market,2026-05-31

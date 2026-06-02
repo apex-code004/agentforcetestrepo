@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="My Book of Business" icon-name="standard:contact">
+
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button label="All" value="All"
+                    variant={allVariant} onclick={handleFilter}></lightning-button>
+                <lightning-button label="Drift Alert" value="Drift Alert"
+                    variant={driftVariant} onclick={handleFilter}></lightning-button>
+                <lightning-button label="High Risk" value="High Risk"
+                    variant={riskVariant} onclick={handleFilter}></lightning-button>
+                <lightning-button label="Churn Risk" value="Churn Risk"
+                    variant={churnVariant} onclick={handleFilter}></lightning-button>
+            </lightning-button-group>
+        </div>
+
+        <div class="slds-var-p-horizontal_medium slds-var-p-bottom_small">
+            <p class="slds-text-body_small slds-text-color_weak">
+                Total Book AUM:
+                <strong>
+                    <lightning-formatted-number
+                        value={totalBookAUM}
+                        format-style="currency"
+                        currency-code="USD"
+                        maximum-fraction-digits="0">
+                    </lightning-formatted-number>
+                </strong>
+                &nbsp;·&nbsp; {clientCount} clients
+            </p>
+        </div>
+
+        <template if:true={isLoading}>
+            <lightning-spinner size="small" alternative-text="Loading..."></lightning-spinner>
+        </template>
+
+        <template if:true={hasClients}>
+            <lightning-datatable
+                key-field="contactId"
+                data={clients}
+                columns={columns}
+                hide-checkbox-column
+                onrowaction={handleRowAction}>
+            </lightning-datatable>
+        </template>
+
+        <template if:false={hasClients}>
+            <template if:false={isLoading}>
+                <div class="slds-var-p-around_medium slds-text-align_center">
+                    <p class="slds-text-color_weak">No clients match the selected filter.</p>
+                </div>
+            </template>
+        </template>
+
+    </lightning-card>
+</template>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <label>All Financial Accounts</label>
+    <filterScope>Everything</filterScope>
+    <columns>NAME</columns>
+    <columns>AccountNumber__c</columns>
+    <columns>AccountType__c</columns>
+    <columns>TotalValue__c</columns>
+    <columns>Status__c</columns>
+    <columns>ContactId__c</columns>
+    <columns>TargetEquityPct__c</columns>
+    <columns>TargetBondPct__c</columns>
+    <columns>TargetCashPct__c</columns>
+</ListView>

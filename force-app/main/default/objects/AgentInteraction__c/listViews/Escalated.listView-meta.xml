@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Escalated</fullName>
+    <label>Escalated Interactions</label>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>WasEscalated__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <columns>NAME</columns>
+    <columns>ContactId__c</columns>
+    <columns>AgentTopic__c</columns>
+    <columns>EscalationReason__c</columns>
+    <columns>InteractionTime__c</columns>
+    <columns>AdvisorId__c</columns>
+</ListView>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Target_Allocations_Must_Sum_100</fullName>
+    <active>true</active>
+    <description>Ensures target equity, bond, and cash allocations add up to 100%.</description>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(TargetEquityPct__c)),
+  NOT(ISBLANK(TargetBondPct__c)),
+  NOT(ISBLANK(TargetCashPct__c)),
+  ROUND(TargetEquityPct__c + TargetBondPct__c + TargetCashPct__c, 2) &lt;&gt; 100
+)</errorConditionFormula>
+    <errorMessage>Target allocations must add up to 100%. Current total: {0}%</errorMessage>
+</ValidationRule>

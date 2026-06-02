@@ -1,0 +1,38 @@
+<template>
+    <lightning-card title="Portfolio Holdings" icon-name="utility:money">
+
+        <div class="slds-var-p-around_medium">
+            <h3 class="slds-text-heading_small slds-var-m-bottom_small">
+                Allocation vs Target
+            </h3>
+            <template for:each={allocationRows} for:item="row">
+                <div key={row.assetClass}
+                     class="slds-grid slds-var-m-bottom_x-small slds-grid_vertical-align-center">
+                    <div class="slds-col slds-size_3-of-12">
+                        <p class="slds-text-body_small">{row.assetClass}</p>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-progress-bar
+                            value={row.currentPct}
+                            size="small"
+                            variant={row.variant}>
+                        </lightning-progress-bar>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                        <p class="slds-text-body_small">
+                            {row.currentPct}% / {row.targetPct}%
+                        </p>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <lightning-datatable
+            key-field="Id"
+            data={holdings}
+            columns={holdingColumns}
+            hide-checkbox-column>
+        </lightning-datatable>
+
+    </lightning-card>
+</template>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <label>All Drift Alerts</label>
+    <filterScope>Everything</filterScope>
+    <columns>NAME</columns>
+    <columns>ContactId__c</columns>
+    <columns>FinancialAccountId__c</columns>
+    <columns>DriftPct__c</columns>
+    <columns>AlertStatus__c</columns>
+    <columns>TriggerSource__c</columns>
+    <columns>DetectedAt__c</columns>
+    <columns>ResolvedAt__c</columns>
+</ListView>

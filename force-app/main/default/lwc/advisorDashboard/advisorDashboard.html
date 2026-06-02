@@ -1,0 +1,40 @@
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading client data..." size="medium"></lightning-spinner>
+    </template>
+
+    <template if:true={hasError}>
+        <lightning-card title="Error">
+            <div class="slds-p-around_medium">
+                <p class="slds-text-color_error">{errorMessage}</p>
+            </div>
+        </lightning-card>
+    </template>
+
+    <template if:true={hasData}>
+        <div class="slds-grid slds-wrap slds-gutters">
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                <c-risk-score-card
+                    client={dashboardData.client}
+                    total-a-u-m={dashboardData.totalAUM}>
+                </c-risk-score-card>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_5-of-12">
+                <c-portfolio-summary-card
+                    accounts={dashboardData.accounts}
+                    holdings={dashboardData.holdings}>
+                </c-portfolio-summary-card>
+            </div>
+
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-12">
+                <c-alert-feed
+                    alerts={dashboardData.alerts}
+                    onalertresolved={handleAlertResolved}>
+                </c-alert-feed>
+            </div>
+
+        </div>
+    </template>
+</template>

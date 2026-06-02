@@ -1,0 +1,6 @@
+AccountNumber__c,AccountType__c,TotalValue__c,TargetEquityPct__c,TargetBondPct__c,TargetCashPct__c,Status__c,ContactId__c
+FA-0001,Individual Brokerage,485000.00,70,25,5,Active,[Sarah Chen Contact ID]
+FA-0002,IRA - Traditional,210000.00,60,35,5,Active,[James Okonkwo Contact ID]
+FA-0003,IRA - Roth,125000.00,40,50,10,Active,[Maria Fernandez Contact ID]
+FA-0004,Individual Brokerage,920000.00,85,10,5,Active,[David Park Contact ID]
+FA-0005,401(k),340000.00,65,30,5,Active,[Aisha Williams Contact ID]
