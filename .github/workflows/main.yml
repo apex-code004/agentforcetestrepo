@@ -1,54 +1,20 @@
 name: Static Analysis
- 
+
+# Apex code review is handled natively by GitHub Copilot.
+# Copilot reads .github/copilot-instructions.md and
+# .github/instructions/*.instructions.md automatically on every PR.
+# This workflow only runs static analysis tools.
+
 on:
   pull_request:
   workflow_dispatch:
- 
+
 permissions:
   checks: write
   contents: read
-  pull-requests: write  # changed from read — needed to post comments
- 
+  pull-requests: read
+
 jobs:
-  apex-doc-agent:
-    runs-on: ubuntu-latest
-    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
- 
-      - name: Get changed Apex files
-        id: changed-files
-        uses: tj-actions/changed-files@v46
-        with:
-          files: '**/*.cls'
- 
-      - name: Run Agent on changed Apex files
-        if: steps.changed-files.outputs.any_changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          pip install anthropic requests --quiet
-          python3 .github/scripts/run_agent.py
-          python3 .github/scripts/apex_review.py
- 
-      - name: Run Agent on ALL Apex files (manual trigger)
-        if: github.event_name == 'workflow_dispatch'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ''
-          REPO: ${{ github.repository }}
-        run: |
-          find . -name "*.cls" > all_files.txt
-          pip install anthropic requests --quiet
-          python3 .github/scripts/run_agent.py --all
-          python3 .github/scripts/apex_review.py --all
- 
   eslint:
     continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest

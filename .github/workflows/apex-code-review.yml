@@ -1,4 +1,11 @@
-name: 🔍 Amadeus Apex Code Review Agent
+name: 🔍 Apex Code Review
+
+# Native GitHub Copilot reviews this PR automatically using:
+#   .github/copilot-instructions.md          → org-wide Amadeus standards
+#   .github/instructions/*.instructions.md   → scoped rules per file type
+#
+# No workflow steps needed for Copilot review — it runs natively on PR open.
+# This workflow only runs static analysis tools (ESLint + Salesforce Code Analyzer).
 
 on:
   pull_request:
@@ -6,74 +13,59 @@ on:
 
 permissions:
   pull-requests: write
-  contents:      read
-  issues:        write
-  models:        read
+  contents: read
+  checks: write
 
 jobs:
-  apex-review:
-    name: Run Apex Code Review
+  eslint:
+    name: ESLint
     runs-on: ubuntu-latest
-
+    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+          node-version: 20
+      - name: Get changed JS files
+        id: changed-files
+        uses: tj-actions/changed-files@v46
         with:
-          python-version: "3.11"
-
-      - name: Install Dependencies
-        run: pip install openai requests
-
-      - name: Resolve PR Number
-        id: resolve_pr
+          files: '**/*.js'
+      - name: Run ESLint
+        if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          npm ci --ignore-scripts
+          npx eslint ${{ steps.changed-files.outputs.all_changed_files }}
 
-      - name: Post In-Progress Comment
-        uses: actions/github-script@v7
+  salesforce-code-analyzer:
+    name: Salesforce Code Analyzer
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ github.actor == 'dependabot[bot]' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ steps.resolve_pr.outputs.pr_number }},
-              body: [
-                "## 🔍 Amadeus Apex Review Agent",
-                "",
-                "⏳ **Review in progress...** Analyzing your Salesforce Apex code against Amadeus Hospitality Development Standards.",
-                "",
-                "> 🔑 Powered by **GitHub Models** (gpt-4o) · Uses built-in `GITHUB_TOKEN` · No Copilot licence required"
-              ].join("\n")
-            });
-
-      - name: Run Apex Code Review
-        env:
-          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER:         ${{ steps.resolve_pr.outputs.pr_number }}
-          REPO:              ${{ github.repository }}
-          GITHUB_RUN_ID:     ${{ github.run_id }}
-          GITHUB_SERVER_URL: ${{ github.server_url }}
-        run: python .github/scripts/apex_review.py
-
-      - name: Handle Failure
-        if: failure()
-        uses: actions/github-script@v7
+          node-version: '>=20.9.0'
+      - uses: actions/setup-java@v4
         with:
-          script: |
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ steps.resolve_pr.outputs.pr_number }},
-              body: [
-                "## ❌ Amadeus Apex Review Agent — Error",
-                "",
-                "The review agent hit an error. See the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.",
-                "",
-                "**To retry:** Push a new commit to this PR to re-trigger the review."
-              ].join("\n")
-            });
+          java-version: '11'
+          distribution: 'zulu'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '>=3.10'
+      - name: Install Salesforce CLI
+        run: npm install -g @salesforce/cli@latest
+      - name: Install Salesforce Code Analyzer
+        run: sf plugins install code-analyzer@latest
+      - name: Run Salesforce Code Analyzer
+        id: run-code-analyzer
+        uses: forcedotcom/run-code-analyzer@v2
+        with:
+          run-arguments: --rule-selector AppExchange --workspace . --view detail --output-file sfca_results.html --output-file sfca_results.json
+          results-artifact-name: salesforce-code-analyzer-results
+      - name: Fail on violations
+        if: |
+          steps.run-code-analyzer.outputs.exit-code > 0 ||
+          steps.run-code-analyzer.outputs.num-sev1-violations > 0 ||
+          steps.run-code-analyzer.outputs.num-sev2-violations > 0
+        run: exit 1
